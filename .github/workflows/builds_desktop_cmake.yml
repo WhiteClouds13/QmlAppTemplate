@@ -65,7 +65,7 @@ jobs:
       - name: Install Qt
         uses: jurplel/install-qt-action@v4
         with:
-          version: ${{env.QT_VERSION}}
+          version: ${{ env.QT_VERSION }}
 
       # Setup env
       - name: Setup env
@@ -88,15 +88,15 @@ jobs:
       - name: Upload application ZIP
         uses: actions/upload-artifact@v4
         with:
-          name: ${{env.APP_NAME}}-${{env.APP_VERSION}}-linux64.tar.gz
-          path: ${{env.APP_NAME}}-${{env.APP_VERSION}}-linux64.tar.gz
+          name: ${{ env.APP_NAME }}-${{ env.APP_VERSION }}-linux64.tar.gz
+          path: ${{ env.APP_NAME }}-${{ env.APP_VERSION }}-linux64.tar.gz
 
       # Upload AppImage
       - name: Upload AppImage
         uses: actions/upload-artifact@v4
         with:
-          name: ${{env.APP_NAME}}-${{env.APP_VERSION}}-linux64.AppImage
-          path: ${{env.APP_NAME}}-${{env.APP_VERSION}}-linux64.AppImage
+          name: ${{ env.APP_NAME }}-${{ env.APP_VERSION }}-linux64.AppImage
+          path: ${{ env.APP_NAME }}-${{ env.APP_VERSION }}-linux64.AppImage
 
   ## macOS build ###############################################################
   build-mac:
@@ -118,7 +118,7 @@ jobs:
       - name: Install Qt
         uses: jurplel/install-qt-action@v4
         with:
-          version: ${{env.QT_VERSION}}
+          version: ${{ env.QT_VERSION }}
 
       # Setup env
       - name: Setup env
@@ -136,7 +136,7 @@ jobs:
           MACOS_CI_KEYCHAIN_PASSWORD: ${{ secrets.MACOS_CI_KEYCHAIN_PASSWORD }}
         run: |
             # Turn our base64-encoded certificate(s) back to a regular file(s)
-            echo "$secrets.MACOS_CERTIFICATE" | base64 --decode > certificate.p12
+            echo "$MACOS_CERTIFICATE" | base64 --decode > certificate.p12
             # Create a temporary headless keychain, import certificate, ...
             security create-keychain -p "$MACOS_CI_KEYCHAIN_PASSWORD" build.keychain
             security set-keychain-settings -lut 21600 build.keychain
@@ -169,8 +169,8 @@ jobs:
       - name: Upload application bundle
         uses: actions/upload-artifact@v4
         with:
-          name: ${{env.APP_NAME}}-${{env.APP_VERSION}}-macOS.zip
-          path: bin/${{env.APP_NAME}}.app
+          name: ${{ env.APP_NAME }}-${{ env.APP_VERSION }}-macOS.zip
+          path: bin/${{ env.APP_NAME }}.app
 
   ## Windows build #############################################################
   build-windows:
@@ -200,7 +200,7 @@ jobs:
       - name: Install Qt
         uses: jurplel/install-qt-action@v4
         with:
-          version: ${{env.QT_VERSION}}
+          version: ${{ env.QT_VERSION }}
           arch: 'win64_msvc2022_64'
 
       # Setup env
@@ -224,12 +224,12 @@ jobs:
       - name: Upload application ZIP
         uses: actions/upload-artifact@v4
         with:
-          name: ${{env.APP_NAME}}-${{env.APP_VERSION}}-win64.zip
-          path: ${{env.APP_NAME}}-${{env.APP_VERSION}}-win64.zip
+          name: ${{ env.APP_NAME }}-${{ env.APP_VERSION }}-win64.zip
+          path: ${{ env.APP_NAME }}-${{ env.APP_VERSION }}-win64.zip
 
       # Upload NSIS installer
       - name: Upload NSIS installer
         uses: actions/upload-artifact@v4
         with:
-          name: ${{env.APP_NAME}}-${{env.APP_VERSION}}-win64.exe
-          path: ${{env.APP_NAME}}-${{env.APP_VERSION}}-win64.exe
+          name: ${{ env.APP_NAME }}-${{ env.APP_VERSION }}-win64.exe
+          path: ${{ env.APP_NAME }}-${{ env.APP_VERSION }}-win64.exe

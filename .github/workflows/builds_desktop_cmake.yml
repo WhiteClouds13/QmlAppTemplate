@@ -163,7 +163,23 @@ jobs:
           /usr/bin/codesign --deep --force --options runtime \
             --entitlements "assets/macos/${{ env.APP_NAME }}.entitlements" \
             --sign "${{ secrets.MACOS_CERTIFICATE_NAME }}" \
-            bin/${{env.APP_NAME}}.app
+            bin/${{ env.APP_NAME }}.app
+
+      # Notarize application bundle
+      - name: Notarize application bundle
+        env:
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+          APPLE_APP_SPECIFIC_PASSWORD: ${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}
+        run: |
+          echo "Create keychain profile"
+          xcrun notarytool store-credentials "notarytool-profile" --apple-id "$APPLE_ID" --team-id "$APPLE_TEAM_ID" --password "$APPLE_APP_SPECIFIC_PASSWORD"
+          echo "Creating temp notarization archive"
+          ditto -c -k --keepParent "bin/${{ env.APP_NAME }}.app" "bin/notarization.zip"
+          echo "Notarize app"
+          xcrun notarytool submit "bin/notarization.zip" --keychain-profile "notarytool-profile" --wait
+          echo "Attach staple"
+          xcrun stapler staple "bin/${{ env.APP_NAME }}.app"
 
       # Upload application bundle
       - name: Upload application bundle

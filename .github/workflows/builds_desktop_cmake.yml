@@ -159,10 +159,11 @@ jobs:
 
       # Codesign application bundle
       - name: Codesign application bundle
-        run: /usr/bin/codesign --deep --force --options runtime \
-              --entitlements assets/macos/${{ env.APP_NAME }}.entitlements \
-              --sign "Developer ID Application: ${{ secrets.APPLE_TEAM_ID }}" \
-              bin/${{env.APP_NAME}}.app
+        run:  |
+          /usr/bin/codesign --deep --force --options runtime \
+            --entitlements "assets/macos/${{ env.APP_NAME }}.entitlements" \
+            --sign "${{ secrets.MACOS_CERTIFICATE_NAME }}" \
+            bin/${{env.APP_NAME}}.app
 
       # Upload application bundle
       - name: Upload application bundle

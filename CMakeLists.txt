@@ -8,10 +8,10 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
-string(TIMESTAMP CURRENT_TIMESTAMP "%s" UTC)
 set(APP_NAME ${CMAKE_PROJECT_NAME})
 set(APP_VERSION ${CMAKE_PROJECT_VERSION})
 set(APP_VERSION_CODE ${TIMESTAMP})
+string(TIMESTAMP CURRENT_TIMESTAMP "%s" UTC)
 
 ################################################################################
 
@@ -31,14 +31,14 @@ message(STATUS "[PROJECT] QT_HOST_PATH              = ${QT_HOST_PATH}")
 find_package(Qt6 REQUIRED COMPONENTS Core Gui Svg Qml Quick QuickControls2)
 find_package(Qt6 REQUIRED COMPONENTS LinguistTools)
 
-qt_standard_project_setup(REQUIRES 6.7
+qt_standard_project_setup(REQUIRES 6.8
                           I18N_SOURCE_LANGUAGE en
                           I18N_TRANSLATED_LANGUAGES fr)
 
 qt_policy(SET QTP0001 NEW)
 qt_policy(SET QTP0002 NEW)
 qt_policy(SET QTP0003 NEW) # Qt 6.7
-#qt_policy(SET QTP0004 NEW) # Qt 6.8
+qt_policy(SET QTP0004 NEW) # Qt 6.8
 
 # Set app icons
 if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
@@ -162,7 +162,7 @@ endif()
 
 ## macOS
 if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
-    #set(CMAKE_OSX_ARCHITECTURES "x86_64;arm64")
+    set(CMAKE_OSX_ARCHITECTURES "x86_64;arm64")
     set(CMAKE_OSX_DEPLOYMENT_TARGET "12.0")
 
     set(app_icon_macos "${CMAKE_SOURCE_DIR}/assets/macos/${CMAKE_PROJECT_NAME}.icns")

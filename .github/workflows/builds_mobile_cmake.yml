@@ -21,32 +21,33 @@ env:
 # SECRETS
 #-------------------------------------------------------------------------------
 
-# convert to base64 (linux) : cat file.keystore | base64 | tr -d '\n' > file.base64
-# convert to base64 (apple) : cat file.keystore | base64 | tr -d '\n' > file.base64
+# convert a file's content to base64: base64 'file.keystore' > file.base64
 
 ## Android secrets:
+# - https://developer.android.com/studio/publish/app-signing#generate-key
+#
 # create a keystore file, convert it to base64
-# save the keystore base64 file under the name ANDROID_SIGNINGKEY_BASE64
+# save the keystore base64 file content under the name ANDROID_SIGNINGKEY_BASE64
 # save the keystore alias under the name ANDROID_SIGNINGKEY_ALIAS
 # save the keystore password under the name ANDROID_SIGNINGKEY_PASSWORD
 
-## Android upload:
+## Android upload: (a valid google developer account is required)
 # - https://developers.google.com/android-publisher/getting_started
 # - https://github.com/fastlane/fastlane/blob/master/fastlane/lib/fastlane/actions/docs/upload_to_play_store.md
-# (a valid google developer account is required)
+#
 # create the google play service account, download the json key, convert it to base64
-# save the base64 under the name GPLAY_SERVICEACCOUNTKEY_BASE64
+# save the key base64 file content under the name GPLAY_SERVICEACCOUNTKEY_BASE64
 
-## Apple secrets:
-# - https://developer.apple.com/help/account/reference/certificate-types
+## Apple secrets: (a valid apple developer account is required)
+# - https://developer.apple.com/help/account/certificates/certificates-overview/
 # - https://docs.github.com/en/actions/deployment/deploying-xcode-applications/installing-an-apple-certificate-on-macos-runners-for-xcode-development
-# (a valid apple developer account is required)
+#
 # create a build certificate with xcode, download it, convert it to base64
 # save the build certificate base64 file under the name APPLE_BUILD_CERTIFICATE_BASE64
 # save the build certificate password under the name APPLE_BUILD_CERTIFICATE_PASSWORD
 # create a provisioning profile for your app bundle id, download it, convert it to base64
 # save the provisioning profile under the name APPLE_PROVISIONING_PROFILE_BASE64
-# a new keychain will be created on the runner to store these certificates, choose a new password under the name APPLE_KEYCHAIN_PASSWORD
+# a new keychain will be created on the runner to store these certificates, choose a new password under the name MACOS_CI_KEYCHAIN_PASSWORD
 
 ## iOS upload:
 # TODO
@@ -157,9 +158,14 @@ jobs:
       - name: Package & sign application
         if: ${{ github.event_name == 'workflow_dispatch' }}
         run: |
-             echo ${{ secrets.ANDROID_SIGNINGKEY_BASE64 }} > release.keystore.base64
-             base64 -d release.keystore.base64 > release.keystore
-             ${{env.QT_HOST_PATH}}/bin/androiddeployqt --input build/android-${{env.APP_NAME}}-deployment-settings.json --output build/android-build/ --android-platform android-34 --aab --release --sign release.keystore ${{ secrets.ANDROID_SIGNINGKEY_ALIAS }} --storepass ${{ secrets.ANDROID_SIGNINGKEY_PASSWORD }}
+             echo ${{ secrets.ANDROID_SIGNINGKEY_BASE64 }} | base64 --decode > release.keystore
+             ${{env.QT_HOST_PATH}}/bin/androiddeployqt \
+               --input build/android-${{env.APP_NAME}}-deployment-settings.json \
+               --output build/android-build/ \
+               --android-platform android-36 \
+               --aab --release \
+               --sign release.keystore ${{ secrets.ANDROID_SIGNINGKEY_ALIAS }} \
+               --storepass ${{ secrets.ANDROID_SIGNINGKEY_PASSWORD }}
 
       # Upload Android app bundle (GitHub CI)
       - name: Upload Android app bundle (GitHub CI)
@@ -225,14 +231,14 @@ jobs:
                -DQT_HOST_PATH:PATH=${{env.QT_HOST_PATH}}
              cmake --build build/ --config Release -- CODE_SIGNING_ALLOWED=NO
 
-      # Setup developer certificate and provisioning profile
-      - name: Setup developer certificate and provisioning profile
+      # Setup certificate(s)
+      - name: Setup certificate(s)
         if: ${{ github.event_name == 'workflow_dispatch' }}
         env:
           APPLE_BUILD_CERTIFICATE_BASE64: ${{ secrets.APPLE_BUILD_CERTIFICATE_BASE64 }}
           APPLE_BUILD_CERTIFICATE_PASSWORD: ${{ secrets.APPLE_BUILD_CERTIFICATE_PASSWORD }}
           APPLE_PROVISIONING_PROFILE_BASE64: ${{ secrets.APPLE_PROVISIONING_PROFILE_BASE64 }}
-          APPLE_KEYCHAIN_PASSWORD: ${{ secrets.APPLE_KEYCHAIN_PASSWORD }}
+          MACOS_CI_KEYCHAIN_PASSWORD: ${{ secrets.MACOS_CI_KEYCHAIN_PASSWORD }}
         run: |
           # create variables
           CERT_PATH=$RUNNER_TEMP/build_certificate.p12
@@ -242,9 +248,9 @@ jobs:
           echo -n "$APPLE_BUILD_CERTIFICATE_BASE64" | base64 --decode -o $CERT_PATH
           echo -n "$APPLE_PROVISIONING_PROFILE_BASE64" | base64 --decode -o $PP_PATH
           # create temporary keychain
-          security create-keychain -p "$APPLE_KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
+          security create-keychain -p "$MACOS_CI_KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
           security set-keychain-settings -lut 21600 $KEYCHAIN_PATH
-          security unlock-keychain -p "$APPLE_KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
+          security unlock-keychain -p "$MACOS_CI_KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
           # import certificate to keychain
           security import $CERT_PATH -P "$APPLE_BUILD_CERTIFICATE_PASSWORD" -A -t cert -f pkcs12 -k $KEYCHAIN_PATH
           security list-keychain -d user -s $KEYCHAIN_PATH

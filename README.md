@@ -79,7 +79,7 @@ $ cmake --build build/
 
 > [Linux](deploy_linux.sh) application ZIP and AppImage
 
-> [macOS](deploy_macos.sh) application ZIP (unsigned)
+> [macOS](deploy_macos.sh) application ZIP (with code signing)
 
 > [Windows](deploy_windows.sh) application ZIP and NSIS installer
 
@@ -87,7 +87,7 @@ $ cmake --build build/
 
 These files are also useful to get an idea about the whole build and deploy process.
 
-> [Desktop (cmake)](.github/workflows/builds_desktop_cmake.yml) Linux, macOS and Windows workflow
+> [Desktop (cmake)](.github/workflows/builds_desktop_cmake.yml) Linux, macOS (notarized) and Windows workflow
 
 > [Mobile (cmake)](.github/workflows/builds_mobile_cmake.yml) Android and iOS workflow (with store deployment)
 

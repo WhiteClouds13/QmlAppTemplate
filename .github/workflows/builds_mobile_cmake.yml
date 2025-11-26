@@ -61,6 +61,9 @@ jobs:
   build-android:
     name: "Android CI build"
     runs-on: ubuntu-24.04
+    env:
+      ANDROID_NDK: "/usr/local/lib/android/sdk/ndk/28.2.13676358"
+      ANDROID_NDK_ROOT: "/usr/local/lib/android/sdk/ndk/28.2.13676358"
     steps:
       # Checkout repository (and submodules)
       - name: Checkout repository (and submodules)
@@ -130,6 +133,7 @@ jobs:
       # Setup env
       - name: Setup env
         run: |
+             echo "CMAKE_BUILD_PARALLEL_LEVEL=$(nproc)" >> $GITHUB_ENV
              echo "QT_HOST_PATH=/home/runner/work/${{ github.event.repository.name }}/Qt/${{ env.QT_VERSION }}/gcc_64" >> $GITHUB_ENV
              echo "QT_TARGET_PATH=/home/runner/work/${{ github.event.repository.name }}/Qt/${{ env.QT_VERSION }}/android_arm64_v8a" >> $GITHUB_ENV
              qmake --version
@@ -212,6 +216,7 @@ jobs:
       # Setup env
       - name: Setup env
         run: |
+             echo "CMAKE_BUILD_PARALLEL_LEVEL=$(sysctl -n hw.ncpu)" >> $GITHUB_ENV
              echo "QT_HOST_PATH=/Users/runner/work/${{ github.event.repository.name }}/Qt/${{ env.QT_VERSION }}/macos" >> $GITHUB_ENV
              echo "QT_TARGET_PATH=/Users/runner/work/${{ github.event.repository.name }}/Qt/${{ env.QT_VERSION }}/ios" >> $GITHUB_ENV
              qmake --version

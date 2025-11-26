@@ -87,9 +87,9 @@ $ cmake --build build/
 
 These files are also useful to get an idea about the whole build and deploy process.
 
-> [Desktop (cmake)](.github/workflows/builds_desktop_cmake.yml) Linux, macOS (notarized) and Windows workflow
+> [Desktop (cmake)](.github/workflows/builds_desktop_cmake.yml) Linux, macOS (with notarization) and Windows workflow
 
-> [Mobile (cmake)](.github/workflows/builds_mobile_cmake.yml) Android and iOS workflow (with store deployment)
+> [Mobile (cmake)](.github/workflows/builds_mobile_cmake.yml) Android and iOS workflow (with code signing & store deployment)
 
 > [Linux flatpak](.github/workflows/flatpak.yml) "on demand" workflow
 
@@ -117,4 +117,4 @@ QmlAppTemplate is released under the terms of the [MIT license](license.md).
 
 * [ComponentLibrary](thirdparty/ComponentLibrary/) uses MIT license
 
-* [IconLibrary](assets/icons/) uses a combinaison of licenses, see [COPYING](assets/icons/COPYING)
+* [IconLibrary](thirdparty/IconLibrary/) uses a combinaison of licenses, see [COPYING](thirdparty/IconLibrary/COPYING)

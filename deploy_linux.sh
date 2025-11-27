@@ -52,10 +52,10 @@ done
 
 ## linuxdeploy INSTALL #########################################################
 
-#unset LD_LIBRARY_PATH; #unset QT_PLUGIN_PATH; #unset QTDIR;
+#unset LD_LIBRARY_PATH; #unset QT_PLUGIN_PATH;
 
 if [[ $use_contribs = true ]] ; then
-  export LD_LIBRARY_PATH=$(pwd)/contribs/src/env/linux_x86_64/usr/lib/:/usr/lib:$LD_LIBRARY_PATH
+  export LD_LIBRARY_PATH=$(pwd)/contribs/src/env/linux_x86_64/usr/lib/:$LD_LIBRARY_PATH
 fi
 
 echo '---- Prepare linuxdeploy + plugins'
@@ -70,11 +70,11 @@ chmod a+x contribs/deploy/linuxdeploy-x86_64.AppImage
 chmod a+x contribs/deploy/linuxdeploy-plugin-appimage-x86_64.AppImage
 chmod a+x contribs/deploy/linuxdeploy-plugin-qt-x86_64.AppImage
 
-# linuxdeploy Qt hacks
+# linuxdeploy-plugin-qt hacks
 #export QMAKE="qmake6" # force Qt6, if you have Qt5 installed
 #export NO_STRIP=true  # workaround, strip not working on modern binutils
 
-# linuxdeploy Qt settings
+# linuxdeploy-plugin-qt settings
 export EXTRA_QT_MODULES="svg;waylandcompositor;"
 export EXTRA_QT_PLUGINS=""
 export EXTRA_PLATFORM_PLUGINS="libqwayland.so" # Qt 6.10+

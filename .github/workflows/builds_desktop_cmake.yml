@@ -131,6 +131,7 @@ jobs:
 
       # Setup certificate(s)
       - name: Setup certificate(s)
+        if: env.MACOS_CERTIFICATE
         env:
           MACOS_CERTIFICATE: ${{ secrets.MACOS_CERTIFICATE }}
           MACOS_CERTIFICATE_NAME: ${{ secrets.MACOS_CERTIFICATE_NAME }}
@@ -162,6 +163,9 @@ jobs:
 
       # Codesign application bundle
       - name: Codesign application bundle
+        if: env.MACOS_CERTIFICATE_NAME
+        env:
+          MACOS_CERTIFICATE_NAME: ${{ secrets.MACOS_CERTIFICATE_NAME }}
         run: |
           /usr/bin/codesign --deep --force --options runtime \
             --entitlements "assets/macos/${{ env.APP_NAME }}.entitlements" \
@@ -170,6 +174,7 @@ jobs:
 
       # Notarize application bundle
       - name: Notarize application bundle
+        if: env.APPLE_ID
         env:
           APPLE_ID: ${{ secrets.APPLE_ID }}
           APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}

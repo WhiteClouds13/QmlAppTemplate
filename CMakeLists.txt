@@ -35,8 +35,8 @@ qt_standard_project_setup(REQUIRES 6.8
 
 qt_policy(SET QTP0001 NEW)
 qt_policy(SET QTP0002 NEW)
-qt_policy(SET QTP0003 NEW) # Qt 6.7
-qt_policy(SET QTP0004 NEW) # Qt 6.8
+qt_policy(SET QTP0003 NEW)
+qt_policy(SET QTP0004 NEW)
 
 # Set app desktop icons
 if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
@@ -49,9 +49,9 @@ qt_add_executable(${CMAKE_PROJECT_NAME}
     src/main.cpp
     src/SettingsManager.cpp src/SettingsManager.h
     assets/assets.qrc
-    thirdparty/IconLibrary/IconLibrary_material.qrc
     ${app_icon_windows}
     ${app_icon_macos}
+    thirdparty/IconLibrary/IconLibrary_material.qrc
 )
 
 qt_add_qml_module(${CMAKE_PROJECT_NAME}
@@ -166,6 +166,8 @@ if(CMAKE_BUILD_TYPE STREQUAL Release)
     )
 endif()
 
+################################################################################
+
 ## Linux
 if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
     # System install rules
@@ -231,7 +233,7 @@ if(CMAKE_SYSTEM_NAME STREQUAL "iOS")
         XCODE_ATTRIBUTE_CURRENT_PROJECT_VERSION             ${CMAKE_PROJECT_VERSION}
         XCODE_ATTRIBUTE_MARKETING_VERSION                   ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
         XCODE_ATTRIBUTE_IPHONEOS_DEPLOYMENT_TARGET          "16.0"
-        XCODE_ATTRIBUTE_TARGETED_DEVICE_FAMILY              "1,2"   # iPhone,iPad
+        XCODE_ATTRIBUTE_TARGETED_DEVICE_FAMILY              "1,2" # iPhone,iPad
         XCODE_ATTRIBUTE_ASSETCATALOG_COMPILER_APPICON_NAME  "AppIcon"
         XCODE_ATTRIBUTE_GCC_GENERATE_DEBUGGING_SYMBOLS      "YES"
     )

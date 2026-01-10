@@ -17,12 +17,26 @@ finish-args:
   # Wayland access
   - --socket=wayland
 
+cleanup:
+  - /include
+  - /lib/cmake
+  - /lib/pkgconfig
+  - /lib/python*
+  - /share/doc
+  - /share/man
+  - /share/zsh
+  - /src
+  - '*.a'
+  - '*.la'
+
 modules:
   - name: Qt6
     buildsystem: cmake-ninja
     builddir: true
     config-opts:
       - -DBUILD_SHARED_LIBS=ON
+      - -DQT_BUILD_EXAMPLES_BY_DEFAULT=OFF
+      - -DQT_BUILD_TESTS_BY_DEFAULT=OFF
       - -DQT_BUILD_SUBMODULES=qtbase;qtdeclarative;qttools;qtshadertools;qtwayland;qtsvg
       - -DQT_QPA_PLATFORMS=wayland;xcb
       - -DINPUT_openssl=linked
@@ -35,11 +49,23 @@ modules:
           project-id: 7927
           url-template: https://download.qt.io/archive/qt/$major.$minor/$version/single/qt-everywhere-src-$version.tar.xz
     cleanup:
-      - '*'
+      - /bin
+      - /doc
+      - /include
+      - /lib/objects-Release
+      - /libexec
+      - /metatypes
+      - /mkspecs
+      - /modules
+      - /plugins/assetimporters
+      - /plugins/designer
+      - /plugins/qmllint
+      - /plugins/qmltooling
+      - /sbom
 
   - name: QmlAppTemplate
     buildsystem: cmake-ninja
     sources:
       - type: archive
         url: https://github.com/emericg/QmlAppTemplate/archive/refs/tags/v0.8.tar.gz
-        sha256:
+        sha256: 

@@ -80,7 +80,7 @@ fi
 ## APP DEPLOY ##################################################################
 
 echo '---- Running macdeployqt'
-if [[ $notarize_bundle = true ]] ; then
+if [[ $notarize_bundle = true && -n "${MACOS_CERTIFICATE_NAME:-}" ]] ; then
   macdeployqt bin/$APP_NAME.app -qmldir=qml/ -hardened-runtime -timestamp -appstore-compliant -codesign=$MACOS_CERTIFICATE_NAME
 else
   macdeployqt bin/$APP_NAME.app -qmldir=qml/

@@ -103,7 +103,7 @@ qt_add_translations(${CMAKE_PROJECT_NAME}
 
 ################################################################################
 
-# 'Other Files" macro
+# "Other Files" macro
 function(add_other_files target)
     foreach(file IN LISTS ARGN)
         target_sources(${target} PRIVATE ${file})
@@ -256,9 +256,12 @@ set_target_properties(${CMAKE_PROJECT_NAME} PROPERTIES
 )
 
 # Output (install)
+#include(GNUInstallDirs)
 #install(TARGETS ${CMAKE_PROJECT_NAME}
 #    LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+#    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 #    BUNDLE DESTINATION "${CMAKE_INSTALL_BINDIR}"
+#    BUNDLE DESTINATION "${CMAKE_SOURCE_DIR}/bin"
 #)
 
 # Output (install & deploy)

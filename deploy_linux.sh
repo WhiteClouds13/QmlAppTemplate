@@ -123,7 +123,7 @@ if [[ $create_package = true ]] ; then
 
   echo '---- Running AppImage packager'
   ./contribs/deploy/linuxdeploy-x86_64.AppImage --appdir bin --plugin qt --output appimage
-  mv $APP_NAME-x86_64.AppImage $APP_NAME-$APP_VERSION-linux64.AppImage
+  mv $APP_NAME_LOWERCASE-x86_64.AppImage $APP_NAME-$APP_VERSION-linux64.AppImage
 
   #echo '---- Installation directory content recap (after linuxdeploy):'
   #find bin/
